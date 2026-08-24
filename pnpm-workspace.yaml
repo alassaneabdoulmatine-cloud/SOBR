@@ -1,3 +1,11 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*' # all packages in apps
+  - 'packages/*' # all packages in packages
+
+minimumReleaseAge: 168
+
+minimumDependencyAge: 1
+
+allowBuilds:
+  esbuild: true
+  unrs-resolver: false

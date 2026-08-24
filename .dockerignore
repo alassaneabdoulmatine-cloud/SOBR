@@ -1,0 +1,43 @@
+# Dependencies
+**/node_modules
+**/.pnpm-store
+
+# Framework / build outputs
+**/.react-router
+**/build
+**/dist
+**/out
+**/.next
+**/.turbo
+**/coverage
+
+# Logs
+**/*.log
+
+# Git
+.git
+.gitignore
+.github
+
+# Environment files
+**/.env
+**/.env.*
+!**/.env.example
+
+# Documentation
+README.md
+**/README.md
+
+# Docker
+docker-compose.yml
+docker-compose.dev.yml
+Dockerfile*
+
+# IDE / editor
+.vscode
+.idea
+
+# Temporary / backup files
+**/*.bak
+**/*.tmp
+**/*.temp
