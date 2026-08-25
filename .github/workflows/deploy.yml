@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository_owner }}/sobr-backend
+  RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
 
 jobs:
   docker:
@@ -46,3 +47,9 @@ jobs:
 
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Deploy to Render
+        if: success()
+        run: curl -X POST "${{ env.RENDER_DEPLOY_HOOK }}"
+
+      
