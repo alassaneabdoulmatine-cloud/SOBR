@@ -1,0 +1,249 @@
+---
+
+title: CI/CD
+description: Automatisation des tests, du build et du déploiement de l'application
+----------------------------------------------------------------------------------
+
+# CI/CD
+
+Le projet utilise **GitHub Actions** pour automatiser l'intégration et le déploiement de l'application.
+
+Le processus est basé sur deux workflows distincts :
+
+* un workflow **CI** exécuté sur la branche `developement` ;
+* un workflow **CD** exécuté lorsque la branche `main` est modifiée.
+
+Le frontend et la documentation sont déployés automatiquement par **Vercel** lorsqu'un changement arrive sur `main`.
+
+**L'architecture générale est donc :**
+
+<Mermaid
+chart="
+graph TD;
+DEV[Developer];
+DEVELOP[push on developement];
+PR[Pull Request];
+MAIN[main];
+
+CI[CI Workflow];
+LINT[ESLint];
+TYPE[Type checking];
+TEST[Tests];
+
+CD[CD Workflow];
+DOCKER[Docker Build];
+GHCR[GitHub Container Registry];
+HOOK[Render Deploy Hook];
+RENDER[Render];
+BACKEND[Backend];
+
+VERCEL[Vercel];
+FRONT[Frontend];
+DOCS[Documentation];
+
+DEV --> DEVELOP;
+DEVELOP --> CI;
+
+CI --> LINT;
+LINT --> TYPE;
+TYPE --> TEST;
+
+DEVELOP --> PR;
+PR --> MAIN;
+
+MAIN --> CD;
+CD --> DOCKER;
+DOCKER --> GHCR;
+GHCR --> HOOK;
+HOOK --> RENDER;
+RENDER --deploy--> BACKEND;
+
+MAIN --> VERCEL;
+VERCEL --deploy--> FRONT;
+VERCEL --deploy--> DOCS;"
+/>
+
+---
+
+# Continuous Integration
+
+Le workflow **Continuous Integration** est exécuté sur la branche `developement`.
+
+Son objectif est de vérifier qu'une modification ne casse pas le projet avant qu'elle soit intégrée dans `main`.
+
+Il effectue trois vérifications :
+
+<Mermaid
+chart="
+graph LR;
+DEVELOP[push on developement];
+LINT[ESLint];
+TYPE[Type checking];
+TEST[Tests];
+SUCCESS[CI successful];
+
+DEVELOP --> LINT;
+LINT --> TYPE;
+TYPE --> TEST;
+TEST --> SUCCESS;"
+/>
+
+Si l'une de ces vérifications échoue, le workflow CI échoue.
+
+---
+
+# Pull Request vers main
+
+Lorsque le développement d'une fonctionnalité est terminé et que la CI est réussie, une **Pull Request** peut être créée afin d'intégrer `developement` dans `main`.
+
+La Pull Request permet de revoir les modifications avant leur intégration dans la branche principale.
+
+Une fois la Pull Request fusionnée, `main` est modifiée et le workflow CD est déclenché.
+
+---
+
+# Continuous Deployment
+
+Le workflow **Continuous Deployment** est responsable du déploiement du backend.
+
+Il est déclenché lorsqu'un changement arrive sur `main`.
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+```
+
+Le pipeline construit l'image Docker, la publie sur GHCR puis déclenche le déploiement sur Render.
+
+<Mermaid
+chart="
+graph LR;
+MAIN[main];
+DOCKER[Docker Build];
+GHCR[GitHub Container Registry];
+HOOK[Render Deploy Hook];
+RENDER[Render];
+BACKEND[Backend];
+
+MAIN --> DOCKER;
+DOCKER --> GHCR;
+GHCR --> HOOK;
+HOOK --> RENDER;
+RENDER --> BACKEND;"
+/>
+
+---
+
+# Construction de l'image Docker
+
+GitHub Actions utilise le `Dockerfile` du backend pour construire une nouvelle image.
+
+<Mermaid
+chart="
+graph LR;
+DOCKERFILE[Dockerfile];
+BUILD[Docker Build];
+IMAGE[Docker Image];
+
+DOCKERFILE --> BUILD;
+BUILD --> IMAGE;"
+/>
+
+L'image contient l'environnement nécessaire à l'exécution du backend :
+
+* Node.js ;
+* les dépendances ;
+* le code de l'application ;
+* les fichiers nécessaires à son exécution.
+
+Docker permet ainsi d'obtenir un environnement d'exécution reproductible.
+
+---
+
+# Publication sur GitHub Container Registry
+
+Après la construction de l'image, GitHub Actions la publie sur **GitHub Container Registry (GHCR)**.
+
+<Mermaid
+chart="
+graph LR;
+IMAGE[Docker Image];
+GHCR[GitHub Container Registry];
+
+IMAGE -->|docker push| GHCR;"
+/>
+
+L'image est généralement identifiée sous la forme :
+
+```text
+ghcr.io/<github-user>/<image-name>:<tag>
+```
+
+GHCR permet de stocker l'image Docker utilisée par Render.
+
+---
+
+# Déploiement sur Render
+
+Une fois l'image publiée sur GHCR, GitHub Actions déclenche le déploiement de Render à l'aide d'un **Render Deploy Hook**.
+
+Un Deploy Hook est une URL permettant de demander à Render de lancer un nouveau déploiement.
+
+GitHub Actions effectue une requête HTTP `POST` vers cette URL.
+
+```bash
+curl -X POST "$RENDER_DEPLOY_HOOK"
+```
+
+Le Deploy Hook est stocké dans les **GitHub Repository Secrets** afin de ne pas exposer sa valeur dans le repository.
+
+```text
+RENDER_DEPLOY_HOOK
+```
+
+Le workflow peut ensuite l'utiliser avec :
+
+```yaml
+${{ secrets.RENDER_DEPLOY_HOOK }}
+```
+
+---
+
+# Déploiement du frontend et de la documentation
+
+Le frontend et la documentation ne sont pas déployés par GitHub Actions.
+
+Ils sont hébergés sur **Vercel**.
+
+Vercel surveille la branche `main` et déclenche automatiquement leurs déploiements lorsqu'un nouveau commit est intégré.
+
+<Mermaid
+chart="
+graph TD;
+MAIN[main];
+VERCEL[Vercel];
+FRONT[Frontend];
+DOCS[Documentation];
+
+MAIN --> VERCEL;
+VERCEL --> FRONT;
+VERCEL --> DOCS;"
+/>
+
+---
+
+# Secrets
+
+Les informations sensibles utilisées par le pipeline sont stockées dans les **GitHub Repository Secrets**.
+
+Le principal secret utilisé pour le déploiement est :
+
+```text
+RENDER_DEPLOY_HOOK
+```
+
+Si une authentification spécifique est nécessaire pour publier l'image sur GHCR, les informations correspondantes doivent également être stockées dans les GitHub Secrets.
+
+Les secrets ne doivent jamais être commités dans le repository.

@@ -8,4 +8,5 @@ minimumDependencyAge: 1
 
 allowBuilds:
   esbuild: true
+  puppeteer: true
   unrs-resolver: false

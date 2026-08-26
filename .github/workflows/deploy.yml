@@ -1,4 +1,4 @@
-name: Backend
+name: CI/CD
 
 on:
   push:
@@ -6,13 +6,48 @@ on:
       - main
 
 env:
+  NODE_VERSION: 24.19.0
+  PNPM_VERSION: 11.22.0
+
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository_owner }}/sobr-backend
   RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
 
 jobs:
+  check:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm turbo lint
+
+      - name: Typecheck
+        run: pnpm turbo check-types
+
+      # - name: Test
+      #   run: pnpm turbo test
+
   docker:
     name: Build & Push Backend
+    needs: check
     runs-on: ubuntu-latest
 
     permissions:
@@ -51,5 +86,3 @@ jobs:
       - name: Deploy to Render
         if: success()
         run: curl -X POST "${{ env.RENDER_DEPLOY_HOOK }}"
-
-      
