@@ -1,11 +1,11 @@
-import { Cta10 } from "~/components/cta10";
-import { Feature43 } from "~/components/feature43";
-import { Footer2 } from "~/components/footer2";
-import { Hero115 } from "~/components/hero115";
-import { Logos18 } from "~/components/logos18";
-import { Navbar1 } from "~/components/navbar1";
-import { Pricing2 } from "~/components/pricing2";
-import { Testimonial9 } from "~/components/testimonial9";
+import { Cta10 } from "~/components/marketing/cta10";
+import { Feature43 } from "~/components/marketing/feature43";
+import { Footer2 } from "~/components/marketing/footer2";
+import { Hero115 } from "~/components/marketing/hero115";
+import { Logos18 } from "~/components/marketing/logos18";
+import { Navbar1 } from "~/components/marketing/navbar1";
+import { Pricing2 } from "~/components/marketing/pricing2";
+import { Testimonial9 } from "~/components/marketing/testimonial9";
 
 export default function Home() {
   return (

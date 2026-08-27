@@ -1,0 +1,21 @@
+{
+    "name": "@repo/validation",
+    "type": "module",
+    "scripts": {
+        "dev": "tsc --watch",
+        "build": "tsc"
+    },
+    "exports": {
+        "./auth": {
+            "types": "./src/auth.ts",
+            "default": "./dist/auth.js"
+        }
+    },
+    "devDependencies": {
+        "@repo/typescript-config": "workspace:*",
+        "typescript": "latest"
+    },
+    "dependencies": {
+        "zod": "^4.4.3"
+    }
+}

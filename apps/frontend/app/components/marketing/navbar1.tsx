@@ -24,7 +24,7 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet";
 import { cn } from "~/lib/utils";
-import { LanguageSelect } from "./select-languages";
+import { LanguageSelect } from "../select-languages";
 
 
 interface MenuItem {
