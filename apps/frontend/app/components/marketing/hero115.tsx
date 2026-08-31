@@ -1,8 +1,7 @@
-import { ArrowRight, Wifi } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { ArrowRight, Wifi } from 'lucide-react';
 
-import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
+import { Button } from '~/components/ui/button';
+import { cn } from '~/lib/utils';
 
 interface Image {
   src: string;
@@ -29,28 +28,29 @@ interface HeroBasicProps {
   icon?: React.ReactNode;
 }
 
-interface Hero115Props extends HeroBasicProps { }
+interface Hero115Props extends HeroBasicProps {}
 type Props = Partial<Hero115Props>;
 
 const defaultProps: Hero115Props = {
-  heading: "Blocks Built With Shadcn & Tailwind",
-  description: "Finely crafted components built with React, Tailwind and shadcn/ui. Developers can copy and paste these blocks directly into their project.",
+  heading: 'Blocks Built With Shadcn & Tailwind',
+  description:
+    'Finely crafted components built with React, Tailwind and shadcn/ui. Developers can copy and paste these blocks directly into their project.',
   buttons: {
     primary: {
-      text: "Browse Components",
-      url: "https://shadcnblocks.com",
+      text: 'Browse Components',
+      url: 'https://shadcnblocks.com',
     },
     secondary: {
-      text: "View GitHub",
-      url: "https://shadcnblocks.com",
+      text: 'View GitHub',
+      url: 'https://shadcnblocks.com',
     },
   },
   image: {
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/image-set/modern/saas-hero/saas-hero-1-16x9.png",
-    srcDark: "https://deifkwefumgah.cloudfront.net/shadcnblocks/image-set/modern/saas-hero/saas-hero-1-16x9-dark.png",
-    alt: "Hero Image Placeholder",
+    src: 'https://deifkwefumgah.cloudfront.net/shadcnblocks/image-set/modern/saas-hero/saas-hero-1-16x9.png',
+    srcDark: 'https://deifkwefumgah.cloudfront.net/shadcnblocks/image-set/modern/saas-hero/saas-hero-1-16x9-dark.png',
+    alt: 'Hero Image Placeholder',
   },
-  byline: "Trusted by 25,000+ businesses worldwide",
+  byline: 'Trusted by 25,000+ businesses worldwide',
   icon: <Wifi className="size-6" />,
 };
 
@@ -60,16 +60,14 @@ const Hero115 = (props: Props) => {
     ...props,
   };
 
-  const { t, i18n } = useTranslation();
-
   return (
-    <section className={cn("overflow-hidden py-32", className)}>
+    <section className={cn('overflow-hidden py-32', className)}>
       <div className="container mx-auto">
         <div className="flex flex-col gap-5">
           <div className="relative isolate flex flex-col gap-5">
             <div
               aria-hidden
-              className="pointer-events-none absolute top-1/2 left-1/2 -z-10 mx-auto size-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-border mask-[linear-gradient(to_top,transparent,transparent,white,white,white,transparent,transparent)] p-16 [-webkit-mask-image:linear-gradient(to_top,transparent,transparent,white,white,white,transparent,transparent)] md:size-[1300px] md:p-32"
+              className="pointer-events-none absolute top-1/2 left-1/2 -z-10 mx-auto size-200 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border mask-[linear-gradient(to_top,transparent,transparent,white,white,white,transparent,transparent)] p-16 [-webkit-mask-image:linear-gradient(to_top,transparent,transparent,white,white,white,transparent,transparent)] md:size-325 md:p-32"
             >
               <div className="size-full rounded-full border border-border p-16 md:p-32">
                 <div className="size-full rounded-full border border-border" />
@@ -79,20 +77,24 @@ const Hero115 = (props: Props) => {
               {icon}
             </span>
             <h1 className="mx-auto max-w-xl text-center text-4xl font-semibold tracking-tight text-pretty md:text-5xl lg:max-w-3xl lg:text-6xl">
-              {t('welcom')}
+              welcom to sobr startup
             </h1>
             <p className="mx-auto max-w-5xl text-center text-lg text-balance text-muted-foreground md:text-xl">
               {description}
             </p>
             <div className="flex flex-col items-center gap-3 pt-3 pb-12">
               {buttons?.primary && (
-                <Button size="lg" className="w-full sm:w-auto" render={<a href={buttons.primary.url} />} nativeButton={false}>{buttons.primary.text}<ArrowRight className="size-4" /></Button>
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  render={<a href={buttons.primary.url} />}
+                  nativeButton={false}
+                >
+                  {buttons.primary.text}
+                  <ArrowRight className="size-4" />
+                </Button>
               )}
-              {byline && (
-                <div className="text-center text-sm text-muted-foreground">
-                  {byline}
-                </div>
-              )}
+              {byline && <div className="text-center text-sm text-muted-foreground">{byline}</div>}
             </div>
           </div>
           {image.srcDark ? (
@@ -100,19 +102,19 @@ const Hero115 = (props: Props) => {
               <img
                 src={image.src}
                 alt={image.alt}
-                className="mx-auto aspect-3/4 h-full max-h-[524px] w-full max-w-5xl rounded-lg border border-border object-cover object-top-left md:aspect-video md:object-top dark:hidden"
+                className="mx-auto aspect-3/4 h-full max-h-131 w-full max-w-5xl rounded-lg border border-border object-cover object-top-left md:aspect-video md:object-top dark:hidden"
               />
               <img
                 src={image.srcDark}
                 alt={image.alt}
-                className="mx-auto hidden aspect-3/4 h-full max-h-[524px] w-full max-w-5xl rounded-lg border border-border object-cover object-top-left md:aspect-video md:object-top dark:block"
+                className="mx-auto hidden aspect-3/4 h-full max-h-131 w-full max-w-5xl rounded-lg border border-border object-cover object-top-left md:aspect-video md:object-top"
               />
             </>
           ) : (
             <img
               src={image.src}
               alt={image.alt}
-              className="mx-auto aspect-3/4 h-full max-h-[524px] w-full max-w-5xl rounded-lg border border-border object-cover object-top-left md:aspect-video md:object-top"
+              className="mx-auto aspect-3/4 h-full max-h-131 w-full max-w-5xl rounded-lg border border-border object-cover object-top-left md:aspect-video md:object-top"
             />
           )}
         </div>

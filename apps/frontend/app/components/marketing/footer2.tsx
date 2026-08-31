@@ -1,17 +1,7 @@
-import {
-  FaFacebook,
-  FaGithub,
-  FaInstagram,
-  FaLinkedin,
-  FaTwitter,
-} from "react-icons/fa";
-import {
-  Logo,
-  LogoImageDesktop,
-  LogoImageMobile,
-} from "~/components/shadcnblocks/logo";
+import { FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { Logo, LogoImageDesktop, LogoImageMobile } from '~/components/shadcnblocks/logo';
 
-import { cn } from "~/lib/utils";
+import { cn } from '~/lib/utils';
 
 interface FooterLink {
   name: string;
@@ -44,56 +34,56 @@ type Props = Partial<Footer2Props>;
 
 const defaultProps: Footer2Props = {
   logo: {
-    url: "https://www.shadcnblocks.com",
-    src: "/images/logo/shadcnblocks-logo-word.svg",
-    alt: "logo",
-    title: "Shadcnblocks.com",
+    url: 'https://www.shadcnblocks.com',
+    src: '/images/logo/shadcnblocks-logo-word.svg',
+    alt: 'logo',
+    title: 'Shadcnblocks.com',
   },
-  description: "Finely crafted blocks built with Shadcn UI.",
+  description: 'Finely crafted blocks built with Shadcn UI.',
   sections: [
     {
-      title: "Product",
+      title: 'Product',
       links: [
-        { name: "Overview", href: "#" },
-        { name: "Pricing", href: "#" },
-        { name: "Marketplace", href: "#" },
-        { name: "Features", href: "#" },
-        { name: "Integrations", href: "#" },
+        { name: 'Overview', href: '#' },
+        { name: 'Pricing', href: '#' },
+        { name: 'Marketplace', href: '#' },
+        { name: 'Features', href: '#' },
+        { name: 'Integrations', href: '#' },
       ],
     },
     {
-      title: "Company",
+      title: 'Company',
       links: [
-        { name: "About", href: "#" },
-        { name: "Team", href: "#" },
-        { name: "Blog", href: "#" },
-        { name: "Careers", href: "#" },
-        { name: "Contact", href: "#" },
+        { name: 'About', href: '#' },
+        { name: 'Team', href: '#' },
+        { name: 'Blog', href: '#' },
+        { name: 'Careers', href: '#' },
+        { name: 'Contact', href: '#' },
       ],
     },
     {
-      title: "Support",
+      title: 'Support',
       links: [
-        { name: "Help center", href: "#" },
-        { name: "Documentation", href: "#" },
-        { name: "Status", href: "#" },
-        { name: "Community", href: "#" },
+        { name: 'Help center', href: '#' },
+        { name: 'Documentation', href: '#' },
+        { name: 'Status', href: '#' },
+        { name: 'Community', href: '#' },
       ],
     },
     {
-      title: "Resources",
+      title: 'Resources',
       links: [
-        { name: "Guides", href: "#" },
-        { name: "Templates", href: "#" },
-        { name: "Sales", href: "#" },
-        { name: "Advertise", href: "#" },
+        { name: 'Guides', href: '#' },
+        { name: 'Templates', href: '#' },
+        { name: 'Sales', href: '#' },
+        { name: 'Advertise', href: '#' },
       ],
     },
   ],
-  copyright: "© 2024 Shadcnblocks.com. All rights reserved.",
+  copyright: '© 2024 Shadcnblocks.com. All rights reserved.',
   legalLinks: [
-    { name: "Terms and Conditions", href: "#" },
-    { name: "Privacy Policy", href: "#" },
+    { name: 'Terms and Conditions', href: '#' },
+    { name: 'Privacy Policy', href: '#' },
   ],
 };
 
@@ -108,36 +98,24 @@ const Footer2 = (props: Props) => {
   const visibleSections = (sections ?? []).slice(0, MAX_SECTIONS);
 
   return (
-    <section className={cn("py-32", className)}>
+    <section className={cn('py-32', className)}>
       <div className="container mx-auto">
         <footer>
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
             <div className="col-span-2 mb-8 lg:mb-0">
               <div className="flex items-center lg:justify-start">
                 <a href={logo?.url}>
-                  <img
-                    src={logo?.src}
-                    alt={logo?.alt}
-                    title={logo?.title}
-                    className="h-7 dark:invert"
-                  />
+                  <img src={logo?.src} alt={logo?.alt} title={logo?.title} className="h-7 dark:invert" />
                 </a>
               </div>
-              <p className="mt-4 text-sm font-medium text-muted-foreground">
-                {description}
-              </p>
+              <p className="mt-4 text-sm font-medium text-muted-foreground">{description}</p>
             </div>
             {visibleSections.map((section, sectionIdx) => (
               <div key={sectionIdx}>
-                <h3 className="mb-4 text-sm font-semibold tracking-tight">
-                  {section.title}
-                </h3>
+                <h3 className="mb-4 text-sm font-semibold tracking-tight">{section.title}</h3>
                 <ul className="space-y-4 text-sm text-muted-foreground">
                   {section.links.map((link, linkIdx) => (
-                    <li
-                      key={linkIdx}
-                      className="font-medium hover:text-primary"
-                    >
+                    <li key={linkIdx} className="font-medium hover:text-primary">
                       <a href={link.href}>{link.name}</a>
                     </li>
                   ))}
