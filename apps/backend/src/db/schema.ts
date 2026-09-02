@@ -1,119 +1,3 @@
-// import { defineRelations } from "drizzle-orm";
-// import {
-//   pgTable,
-//   text,
-//   timestamp,
-//   boolean,
-//   index,
-//   uniqueIndex,
-// } from "drizzle-orm/pg-core";
-
-// export const user = pgTable("user", {
-//   id: text("id").primaryKey(),
-//   name: text("name").notNull(),
-//   email: text("email").notNull().unique(),
-//   emailVerified: boolean("email_verified").default(false).notNull(),
-//   image: text("image"),
-//   createdAt: timestamp("created_at").defaultNow().notNull(),
-//   updatedAt: timestamp("updated_at")
-//     .defaultNow()
-//     .$onUpdate(() => /* @__PURE__ */ new Date())
-//     .notNull(),
-// });
-
-// export const session = pgTable(
-//   "session",
-//   {
-//     id: text("id").primaryKey(),
-//     expiresAt: timestamp("expires_at").notNull(),
-//     token: text("token").notNull().unique(),
-//     createdAt: timestamp("created_at").defaultNow().notNull(),
-//     updatedAt: timestamp("updated_at")
-//       .$onUpdate(() => /* @__PURE__ */ new Date())
-//       .notNull(),
-//     ipAddress: text("ip_address"),
-//     userAgent: text("user_agent"),
-//     userId: text("user_id")
-//       .notNull()
-//       .references(() => user.id, { onDelete: "cascade" }),
-//   },
-//   (table) => [index("session_userId_idx").on(table.userId)],
-// );
-
-// export const account = pgTable(
-//   "account",
-//   {
-//     id: text("id").primaryKey(),
-//     issuer: text("issuer").notNull(),
-//     accountId: text("account_id").notNull(),
-//     providerId: text("provider_id").notNull(),
-//     userId: text("user_id")
-//       .notNull()
-//       .references(() => user.id, { onDelete: "cascade" }),
-//     accessToken: text("access_token"),
-//     refreshToken: text("refresh_token"),
-//     idToken: text("id_token"),
-//     accessTokenExpiresAt: timestamp("access_token_expires_at"),
-//     refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-//     scope: text("scope"),
-//     password: text("password"),
-//     createdAt: timestamp("created_at").defaultNow().notNull(),
-//     updatedAt: timestamp("updated_at")
-//       .$onUpdate(() => /* @__PURE__ */ new Date())
-//       .notNull(),
-//   },
-//   (table) => [
-//     uniqueIndex("account_issuer_accountId_uidx").on(
-//       table.issuer,
-//       table.accountId,
-//     ),
-//     index("account_userId_idx").on(table.userId),
-//   ],
-// );
-
-// export const verification = pgTable(
-//   "verification",
-//   {
-//     id: text("id").primaryKey(),
-//     identifier: text("identifier").notNull(),
-//     value: text("value").notNull(),
-//     expiresAt: timestamp("expires_at").notNull(),
-//     createdAt: timestamp("created_at").defaultNow().notNull(),
-//     updatedAt: timestamp("updated_at")
-//       .defaultNow()
-//       .$onUpdate(() => /* @__PURE__ */ new Date())
-//       .notNull(),
-//   },
-//   (table) => [index("verification_identifier_idx").on(table.identifier)],
-// );
-
-// export const userRelations = defineRelations(user, ({ many }) => ({
-//   sessions: many(session),
-//   accounts: many(account),
-// }));
-
-// export const sessionRelations = defineRelations(session, ({ one }) => ({
-//   user: one(user, {
-//     fields: [session.userId],
-//     references: [user.id],
-//   }),
-// }));
-
-// export const accountRelations = defineRelations(account, ({ one }) => ({
-//   user: one(user, {
-//     fields: [account.userId],
-//     references: [user.id],
-//   }),
-// }));
-
-// export const schema = {
-//   user,
-//   session,
-//   account,
-//   verification,
-// }
-
-
 import { defineRelations } from "drizzle-orm";
 import {
   pgTable,
@@ -122,6 +6,7 @@ import {
   boolean,
   index,
   uniqueIndex,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -133,7 +18,7 @@ export const user = pgTable("user", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
 });
 
@@ -143,7 +28,7 @@ export const session = pgTable("session", {
   token: text("token").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
@@ -171,7 +56,7 @@ export const account = pgTable("account", {
   password: text("password"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
 },
   (table) => [
@@ -191,13 +76,24 @@ export const verification = pgTable("verification", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
 },
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-// Regroupement du schéma, requis pour defineRelations
+export const post = pgTable("post", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+// shema = all tables  
 export const schema = {
   user,
   session,
@@ -205,10 +101,7 @@ export const schema = {
   verification,
 };
 
-// defineRelations s'appelle UNE SEULE FOIS sur tout le schéma.
-// Chaque clé (user, session, account...) correspond à une table du schéma,
-// et on définit ses relations avec r.one.<table>() / r.many.<table>()
-// en utilisant from/to (et non plus fields/references comme l'ancienne API `relations()`).
+// Relations between tables for drizzl orm 
 export const relations = defineRelations(schema, (r) => ({
   user: {
     sessions: r.many.session({
