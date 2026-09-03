@@ -1,6 +1,7 @@
 import { defineRelations } from 'drizzle-orm';
-import { pgTable, text, timestamp, boolean, index, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, index, uniqueIndex } from 'drizzle-orm/pg-core';
 
+// database tables
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -10,7 +11,7 @@ export const user = pgTable('user', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
 
@@ -22,13 +23,14 @@ export const session = pgTable(
     token: text('token').notNull().unique(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),
     userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
+    activeOrganizationId: text('active_organization_id'),
   },
   (table) => [index('session_userId_idx').on(table.userId)],
 );
@@ -52,7 +54,7 @@ export const account = pgTable(
     password: text('password'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
   (table) => [
@@ -71,10 +73,57 @@ export const verification = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')
       .defaultNow()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
   (table) => [index('verification_identifier_idx').on(table.identifier)],
+);
+
+export const organization = pgTable('organization', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  logo: text('logo'),
+  createdAt: timestamp('created_at').notNull(),
+  metadata: text('metadata'),
+});
+
+export const member = pgTable(
+  'member',
+  {
+    id: text('id').primaryKey(),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    role: text('role').default('member').notNull(),
+    createdAt: timestamp('created_at').notNull(),
+  },
+  (table) => [index('member_organizationId_idx').on(table.organizationId), index('member_userId_idx').on(table.userId)],
+);
+
+export const invitation = pgTable(
+  'invitation',
+  {
+    id: text('id').primaryKey(),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    email: text('email').notNull(),
+    role: text('role'),
+    status: text('status').default('pending').notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    inviterId: text('inviter_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+  },
+  (table) => [
+    index('invitation_organizationId_idx').on(table.organizationId),
+    index('invitation_email_idx').on(table.email),
+  ],
 );
 
 // shema = all tables
@@ -83,6 +132,9 @@ export const schema = {
   session,
   account,
   verification,
+  organization,
+  member,
+  invitation,
 };
 
 // Relations between tables for drizzl orm
@@ -96,16 +148,59 @@ export const relations = defineRelations(schema, (r) => ({
       from: r.user.id,
       to: r.account.userId,
     }),
+    member: r.many.member({
+      from: r.user.id,
+      to: r.member.userId,
+    }),
+    invitation: r.many.invitation({
+      from: r.user.id,
+      to: r.invitation.inviterId,
+    }),
   },
+
   session: {
     user: r.one.user({
       from: r.session.userId,
       to: r.user.id,
     }),
   },
+
   account: {
     user: r.one.user({
       from: r.account.userId,
+      to: r.user.id,
+    }),
+  },
+
+  organization: {
+    member: r.many.member({
+      from: r.organization.id,
+      to: r.member.organizationId,
+    }),
+    invitation: r.many.invitation({
+      from: r.organization.id,
+      to: r.invitation.organizationId,
+    }),
+  },
+
+  member: {
+    organization: r.one.organization({
+      from: r.member.organizationId,
+      to: r.organization.id,
+    }),
+    user: r.one.user({
+      from: r.member.userId,
+      to: r.user.id,
+    }),
+  },
+
+  invitation: {
+    organization: r.one.organization({
+      from: r.invitation.organizationId,
+      to: r.organization.id,
+    }),
+    inviter: r.one.user({
+      from: r.invitation.inviterId,
       to: r.user.id,
     }),
   },
