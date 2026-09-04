@@ -1,8 +1,7 @@
-import { type RouteConfig, index, route } from '@react-router/dev/routes';
+import { type RouteConfig, index, layout, route } from '@react-router/dev/routes';
 
 export default [
   index('routes/home.tsx'),
-  route('login', 'routes/login-signup/login.tsx'),
-  route('signup', 'routes/login-signup/signup.tsx'),
-  route('dashbord', 'routes/dashbord.tsx'),
+  layout('layouts/anonymous-layout.tsx', [route('login', 'routes/login.tsx'), route('signup', 'routes/signup.tsx')]),
+  layout('layouts/private-layout.tsx', [route('dashboard', 'routes/dashboard.tsx')]),
 ] satisfies RouteConfig;
