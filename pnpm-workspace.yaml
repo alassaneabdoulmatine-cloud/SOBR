@@ -7,5 +7,9 @@ minimumReleaseAge: 168
 minimumDependencyAge: 1
 
 allowBuilds:
+  '@parcel/watcher': false
+  '@prisma/engines': false
   esbuild: true
+  prisma: false
+  puppeteer: true
   unrs-resolver: false
