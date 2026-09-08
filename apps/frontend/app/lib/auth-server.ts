@@ -17,7 +17,6 @@ export async function requireUser(headers: Headers) {
   const { data: session, error } = await getSession({
     fetchOptions: { headers },
   });
-  console.log(session, error);
   if (!session && !error) {
     throw redirect('/login');
   }

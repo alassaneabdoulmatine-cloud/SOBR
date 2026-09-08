@@ -32,7 +32,7 @@ export function SignupForm() {
         name,
         email,
         password,
-        callbackURL: '/dashboard',
+        callbackURL: '/workspace',
       });
 
       if (result.error) {
@@ -52,7 +52,7 @@ export function SignupForm() {
         description: 'You have been signed up successfully.',
       });
 
-      navigate('/dashboard');
+      navigate('/workspace');
     } catch (error: any) {}
   };
 

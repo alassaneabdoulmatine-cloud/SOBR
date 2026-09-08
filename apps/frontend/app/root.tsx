@@ -4,6 +4,7 @@ import type { Route } from './+types/root';
 import './app.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from './components/ui/toast';
+import { TooltipProvider } from './components/ui/tooltip';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -33,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           <Toaster />
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />

@@ -9,6 +9,10 @@
         "./auth": {
             "types": "./src/auth.ts",
             "default": "./dist/auth.js"
+        },
+        "./workspace": {
+            "types": "./src/workspace.ts",
+            "default": "./dist/workspace.js"
         }
     },
     "devDependencies": {

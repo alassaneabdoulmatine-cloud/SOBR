@@ -1,5 +1,3 @@
-// layouts/anonymous-layout.tsx
-
 import { Outlet } from 'react-router';
 import { requireAnonymous } from '~/lib/auth-server';
 
