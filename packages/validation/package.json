@@ -1,25 +1,26 @@
 {
-    "name": "@repo/validation",
-    "type": "module",
-    "scripts": {
-        "dev": "tsc --watch",
-        "build": "tsc"
+  "name": "@repo/validation",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "check-types": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "exports": {
+    "./auth": {
+      "types": "./src/auth.ts",
+      "default": "./dist/auth.js"
     },
-    "exports": {
-        "./auth": {
-            "types": "./src/auth.ts",
-            "default": "./dist/auth.js"
-        },
-        "./workspace": {
-            "types": "./src/workspace.ts",
-            "default": "./dist/workspace.js"
-        }
-    },
-    "devDependencies": {
-        "@repo/typescript-config": "workspace:*",
-        "typescript": "latest"
-    },
-    "dependencies": {
-        "zod": "^4.4.3"
+    "./workspace": {
+      "types": "./src/workspace.ts",
+      "default": "./dist/workspace.js"
     }
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "latest"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
 }
