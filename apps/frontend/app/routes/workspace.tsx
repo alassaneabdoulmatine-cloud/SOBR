@@ -15,6 +15,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const { data } = await organization.getOrganization({
     fetchOptions: { headers: request.headers },
   });
+  console.log('data', data);
   if (data) {
     throw redirect('/dashboard');
   }
