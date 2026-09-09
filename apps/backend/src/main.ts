@@ -13,10 +13,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // app.use((req, res, next) => {
-  //   console.log('XFF:', req.headers['x-forwarded-for']);
-  //   next();
-  // });
+  app.use((req, res, next) => {
+    console.log('XFF:', req.headers['x-forwarded-for']);
+    next();
+  });
 
   await app.listen(process.env.PORT ?? 4000);
 }
