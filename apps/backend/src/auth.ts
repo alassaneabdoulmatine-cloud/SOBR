@@ -32,7 +32,7 @@ export const auth = betterAuth({
   advanced: {
     defaultCookieAttributes: {
       sameSite: 'none',
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
     },
     // ipAddress: {
     //   ipAddressHeaders: ['x-forwarded-for'],
