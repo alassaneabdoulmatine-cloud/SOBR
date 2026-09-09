@@ -4,6 +4,8 @@ import { db } from './db';
 import { schema } from './db/schema';
 import { organization } from 'better-auth/plugins';
 
+const weburl = process.env.WEB_URL || 'http://localhost:5173';
+
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'pg',
@@ -21,7 +23,7 @@ export const auth = betterAuth({
     },
   },
 
-  trustedOrigins: ['http://localhost:5173'],
+  trustedOrigins: [weburl],
 
   plugins: [organization()],
 });
