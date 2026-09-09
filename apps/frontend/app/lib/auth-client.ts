@@ -1,9 +1,7 @@
 import { createAuthClient } from 'better-auth/react';
 import { organizationClient } from 'better-auth/client/plugins';
 
-const baseURL = 'https://sobr-backend-latest.onrender.com';
-console.log('auth base url', process.env.BETTER_AUTH_URL);
-console.log('base url', baseURL);
+const baseURL = import.meta.env.VITE_BETTER_AUTH_URL || 'http://localhost:4000';
 
 export const authClient = createAuthClient({
   baseURL: baseURL,
