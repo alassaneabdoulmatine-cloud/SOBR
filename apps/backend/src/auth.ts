@@ -24,12 +24,18 @@ export const auth = betterAuth({
   },
 
   trustedOrigins: [weburl],
+  secret: process.env.BETTER_AUTH_SECRET as string,
+  baseURL: process.env.BETTER_AUTH_URL as string,
 
   plugins: [organization()],
 
   advanced: {
-    ipAddress: {
-      ipAddressHeaders: ['x-forwarded-for'],
+    defaultCookieAttributes: {
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
     },
+    // ipAddress: {
+    //   ipAddressHeaders: ['x-forwarded-for'],
+    // },
   },
 });
