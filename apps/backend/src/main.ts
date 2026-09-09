@@ -13,19 +13,19 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+  // app.getHttpAdapter().getInstance().set('trust proxy', 1);
 
-  app.use((req, res, next) => {
-    console.log({
-      xff: req.headers['x-forwarded-for'],
-      xRealIp: req.headers['x-real-ip'],
-      socketIp: req.socket.remoteAddress,
-      ip: req.ip,
-      ips: req.ips,
-    });
+  // app.use((req, res, next) => {
+  //   console.log({
+  //     xff: req.headers['x-forwarded-for'],
+  //     xRealIp: req.headers['x-real-ip'],
+  //     socketIp: req.socket.remoteAddress,
+  //     ip: req.ip,
+  //     ips: req.ips,
+  //   });
 
-    next();
-  });
+  //   next();
+  // });
 
   await app.listen(process.env.PORT ?? 4000);
 }
