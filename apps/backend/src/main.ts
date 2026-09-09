@@ -13,8 +13,17 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   app.use((req, res, next) => {
-    console.log('XFF:', req.headers['x-forwarded-for']);
+    console.log({
+      xff: req.headers['x-forwarded-for'],
+      xRealIp: req.headers['x-real-ip'],
+      socketIp: req.socket.remoteAddress,
+      ip: req.ip,
+      ips: req.ips,
+    });
+
     next();
   });
 
