@@ -28,14 +28,4 @@ export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL as string,
 
   plugins: [organization()],
-
-  advanced: {
-    defaultCookieAttributes: {
-      sameSite: 'none',
-      secure: true,
-    },
-    // ipAddress: {
-    //   ipAddressHeaders: ['x-forwarded-for'],
-    // },
-  },
 });
