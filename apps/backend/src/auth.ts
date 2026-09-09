@@ -26,4 +26,10 @@ export const auth = betterAuth({
   trustedOrigins: [weburl],
 
   plugins: [organization()],
+
+  advanced: {
+    ipAddress: {
+      ipAddressHeaders: ['x-forwarded-for'],
+    },
+  },
 });
