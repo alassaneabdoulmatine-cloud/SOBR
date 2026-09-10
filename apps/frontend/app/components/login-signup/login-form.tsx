@@ -8,10 +8,11 @@ import { signIn } from '~/lib/auth-client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from '../ui/toast';
 import { Spinner } from '../ui/spinner';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigation } from 'react-router';
+import { useState } from 'react';
 
 export function LoginForm() {
-  const navigate = useNavigate();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const { control, handleSubmit } = useForm<LoginFormType>({
     resolver: zodResolver(loginFormSchema),
@@ -44,12 +45,15 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormType) => {
     try {
       await loginMutateAsync(data);
+      setIsRedirecting(true);
 
       toast.add({
         type: 'success',
         description: 'You have been logged in successfully.',
       });
-    } catch (error: any) {}
+    } catch (error: any) {
+      setIsRedirecting(false);
+    }
   };
 
   const handleGoogleLogin = async () => {
@@ -114,8 +118,8 @@ export function LoginForm() {
         />
 
         <Field>
-          <Button type="submit" className="cursor-pointer" disabled={loginIsPending}>
-            {loginIsPending && <Spinner />}
+          <Button type="submit" className="cursor-pointer" disabled={loginIsPending || isRedirecting}>
+            {(loginIsPending || isRedirecting) && <Spinner />}
             Login
           </Button>
 
@@ -128,7 +132,7 @@ export function LoginForm() {
           <Button
             variant="outline"
             type="button"
-            disabled={loginIsPending}
+            disabled={loginIsPending || isRedirecting}
             onClick={handleGoogleLogin}
             className="cursor-pointer"
           >

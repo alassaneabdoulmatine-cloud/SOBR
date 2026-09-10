@@ -9,9 +9,11 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from '../ui/toast';
 import { Spinner } from '../ui/spinner';
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
 
 export function SignupForm() {
   const navigate = useNavigate();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const { control, handleSubmit } = useForm<SignupFormType>({
     resolver: zodResolver(signupFormSchema),
@@ -46,6 +48,7 @@ export function SignupForm() {
   const onSubmit = async (data: SignupFormType) => {
     try {
       await signupMutateAsync(data);
+      setIsRedirecting(true);
 
       toast.add({
         type: 'success',
@@ -53,7 +56,9 @@ export function SignupForm() {
       });
 
       navigate('/workspace');
-    } catch (error: any) {}
+    } catch (error: any) {
+      setIsRedirecting(false);
+    }
   };
 
   const handleGoogleSignup = async () => {
@@ -171,8 +176,8 @@ export function SignupForm() {
         />
 
         <Field>
-          <Button type="submit" className="cursor-pointer" disabled={signupIsPending}>
-            {signupIsPending && <Spinner />}
+          <Button type="submit" className="cursor-pointer" disabled={signupIsPending || isRedirecting}>
+            {(signupIsPending || isRedirecting) && <Spinner />}
             Create Account
           </Button>
 
@@ -185,7 +190,7 @@ export function SignupForm() {
           <Button
             variant="outline"
             type="button"
-            disabled={signupIsPending}
+            disabled={signupIsPending || isRedirecting}
             onClick={handleGoogleSignup}
             className="cursor-pointer"
           >

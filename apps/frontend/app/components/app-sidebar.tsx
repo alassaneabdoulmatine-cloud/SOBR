@@ -4,14 +4,13 @@ import {
   Check,
   House,
   Layers,
-  CheckSquare,
-  BarChart3,
   ChevronsUpDown,
   LogOut,
   Plus,
   CreditCard,
   Bell,
   BadgeCheck,
+  Settings,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -107,14 +106,9 @@ export function AppSidebar() {
       icon: Layers,
     },
     {
-      title: 'Tasks',
-      url: '/tasks',
-      icon: CheckSquare,
-    },
-    {
-      title: 'Analytics',
-      url: '/analytics',
-      icon: BarChart3,
+      title: 'Setting',
+      url: '/settings',
+      icon: Settings,
     },
   ];
 
@@ -140,18 +134,18 @@ export function AppSidebar() {
     <>
       <Sidebar>
         {/* Workspace Switcher Header */}
-        <SidebarHeader>
+        <SidebarHeader className="bg-background">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
-                <DropdownMenuTrigger render={<SidebarMenuButton size="lg" />}>
+                <DropdownMenuTrigger render={<SidebarMenuButton size="lg" className="bg-background cursor-pointer" />}>
                   {currentOrgName ? (
                     <div className="flex flex-row w-full items-center justify-center gap-2">
                       <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary font-semibold text-sm">
                         {currentOrgInitial}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-semibold">{currentOrgName}</span>
+                        <span className="text-sm font-semibold w-32 truncate">{currentOrgName}</span>
                         <span className="text-xs">Workspace</span>
                       </div>
                       <ChevronsUpDown className="ml-auto size-4" />
@@ -215,12 +209,7 @@ export function AppSidebar() {
                   const active = isItemActive(item.url);
                   return (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        render={<Link to={item.url} />}
-                        isActive={active}
-                        tooltip={item.title}
-                        className="p-2"
-                      >
+                      <SidebarMenuButton render={<Link to={item.url} />} isActive={active} tooltip={item.title}>
                         <item.icon />
                         <span>{item.title}</span>
                       </SidebarMenuButton>

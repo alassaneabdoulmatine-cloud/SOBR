@@ -10,27 +10,27 @@ import { useWorkspace } from '~/hooks/use-workspace';
 import { redirect } from 'react-router';
 import type { Route } from './+types/workspace';
 import { organization } from '~/lib/auth-client';
+import { useState } from 'react';
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { data } = await organization.getOrganization({
+  const { data } = await organization.list({
     fetchOptions: { headers: request.headers },
   });
   console.log('data', data);
-  if (data) {
+  if (data && data.length > 0) {
     throw redirect('/dashboard');
   }
   return;
 }
 
 export default function WorkspacePage() {
-  const { control, handleSubmit, watch } = useForm<CreateWorkspaceFormType>({
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const { control, handleSubmit } = useForm<CreateWorkspaceFormType>({
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
       name: '',
     },
   });
-
-  const watchedName = watch('name') || '';
 
   const { createWorkspaceMutateAsync, isSubmitting, submitError } = useWorkspace();
 
@@ -42,8 +42,9 @@ export default function WorkspacePage() {
         name: data.name.trim(),
         slug: slug || 'workspace',
       });
+      setIsRedirecting(true);
     } catch {
-      // Error is caught and displayed via submitError
+      setIsRedirecting(false);
     }
   };
   return (
@@ -89,8 +90,8 @@ export default function WorkspacePage() {
               </div>
             )}
 
-            <Button type="submit" size="lg" disabled={isSubmitting || !watchedName.trim()} className="cursor-pointer">
-              {isSubmitting && <Spinner />}
+            <Button type="submit" size="lg" disabled={isSubmitting || isRedirecting} className="cursor-pointer">
+              {(isSubmitting || isRedirecting) && <Spinner />}
               Continue
             </Button>
           </FieldGroup>
