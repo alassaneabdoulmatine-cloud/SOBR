@@ -1,20 +1,37 @@
 {
   "name": "@repo/validation",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./auth-schema": {
+      "types": "./dist/auth-schema.d.ts",
+      "import": "./dist/auth-schema.js",
+      "default": "./dist/auth-schema.js"
+    },
+    "./workspace-schema": {
+      "types": "./dist/workspace-schema.d.ts",
+      "import": "./dist/workspace-schema.js",
+      "default": "./dist/workspace-schema.js"
+    },
+    "./project-schema": {
+      "types": "./dist/project-schema.d.ts",
+      "import": "./dist/project-schema.js",
+      "default": "./dist/project-schema.js"
+    }
+  },
   "scripts": {
     "dev": "tsc --watch",
     "check-types": "tsc --noEmit",
     "build": "tsc"
-  },
-  "exports": {
-    "./auth": {
-      "types": "./src/auth.ts",
-      "default": "./dist/auth.js"
-    },
-    "./workspace": {
-      "types": "./src/workspace.ts",
-      "default": "./dist/workspace.js"
-    }
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

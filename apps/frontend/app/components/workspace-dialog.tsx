@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { createWorkspaceSchema, type CreateWorkspaceFormType } from '@repo/validation/workspace';
+import {
+  createWorkspaceSchema,
+  type CreateWorkspaceFormType,
+} from '@repo/validation';
 import { Button } from '~/components/ui/button';
 import {
   Dialog,

@@ -6,6 +6,7 @@ export default [
   layout('layouts/private-layout.tsx', [
     route('workspace', 'routes/workspace.tsx'),
     layout('layouts/body-layout.tsx', [
+      route('editor', 'routes/editor.tsx'),
       layout('layouts/body-sidebar-layout.tsx', [
         route('dashboard', 'routes/dashboard.tsx'),
         route('presets', 'routes/presets.tsx'),

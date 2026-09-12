@@ -1,7 +1,7 @@
 import { defineRelations } from 'drizzle-orm';
-import { pgTable, text, timestamp, boolean, index, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, index, uniqueIndex, pgEnum } from 'drizzle-orm/pg-core';
 
-// database tables
+// authentication and autorisation tables
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -126,6 +126,26 @@ export const invitation = pgTable(
   ],
 );
 
+// editor tables
+export const projectFormat = pgEnum('project_format', ['Horyzontal', 'Vertical']);
+export const project = pgTable('project', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text('name').notNull(),
+  thumbnailUrl: text('thumbnail_url'),
+  format: projectFormat('format').default('Vertical'),
+  organizationId: text('organization_id')
+    .notNull()
+    .references(() => organization.id, { onDelete: 'cascade' }),
+  ownerId: text('owner_id').references(() => user.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
 // shema = all tables
 export const schema = {
   user,
@@ -135,73 +155,5 @@ export const schema = {
   organization,
   member,
   invitation,
+  project,
 };
-
-// Relations between tables for drizzl orm
-export const relations = defineRelations(schema, (r) => ({
-  user: {
-    sessions: r.many.session({
-      from: r.user.id,
-      to: r.session.userId,
-    }),
-    accounts: r.many.account({
-      from: r.user.id,
-      to: r.account.userId,
-    }),
-    member: r.many.member({
-      from: r.user.id,
-      to: r.member.userId,
-    }),
-    invitation: r.many.invitation({
-      from: r.user.id,
-      to: r.invitation.inviterId,
-    }),
-  },
-
-  session: {
-    user: r.one.user({
-      from: r.session.userId,
-      to: r.user.id,
-    }),
-  },
-
-  account: {
-    user: r.one.user({
-      from: r.account.userId,
-      to: r.user.id,
-    }),
-  },
-
-  organization: {
-    member: r.many.member({
-      from: r.organization.id,
-      to: r.member.organizationId,
-    }),
-    invitation: r.many.invitation({
-      from: r.organization.id,
-      to: r.invitation.organizationId,
-    }),
-  },
-
-  member: {
-    organization: r.one.organization({
-      from: r.member.organizationId,
-      to: r.organization.id,
-    }),
-    user: r.one.user({
-      from: r.member.userId,
-      to: r.user.id,
-    }),
-  },
-
-  invitation: {
-    organization: r.one.organization({
-      from: r.invitation.organizationId,
-      to: r.organization.id,
-    }),
-    inviter: r.one.user({
-      from: r.invitation.inviterId,
-      to: r.user.id,
-    }),
-  },
-}));

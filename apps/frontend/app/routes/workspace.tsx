@@ -1,6 +1,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createWorkspaceSchema, type CreateWorkspaceFormType } from '@repo/validation/workspace';
+import { createWorkspaceSchema, type CreateWorkspaceFormType } from '@repo/validation';
 import { Button } from '~/components/ui/button';
 import { Field, FieldError, FieldGroup } from '~/components/ui/field';
 import { Input } from '~/components/ui/input';

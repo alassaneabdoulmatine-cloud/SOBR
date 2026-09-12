@@ -2,7 +2,7 @@ import { Button } from '~/components/ui/button';
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSeparator } from '~/components/ui/field';
 import { Input } from '~/components/ui/input';
 import { Controller, useForm } from 'react-hook-form';
-import { signupFormSchema, type SignupFormType } from '@repo/validation/auth';
+import { signupFormSchema, type SignupFormType } from '@repo/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn, signUp } from '~/lib/auth-client';
 import { useMutation } from '@tanstack/react-query';

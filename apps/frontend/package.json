@@ -9,6 +9,7 @@
     "check-types": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@repo/validation": "workspace:*",
     "@base-ui/react": "^1.7.0",
     "@fontsource-variable/geist": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
@@ -37,7 +38,6 @@
     "@react-router/dev": "^8.3.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@repo/validation": "workspace:*",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^22",
     "@types/react": "^19.2.14",

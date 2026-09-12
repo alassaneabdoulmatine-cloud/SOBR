@@ -3,13 +3,13 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSepar
 import { Input } from '~/components/ui/input';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { loginFormSchema, type LoginFormType } from '@repo/validation/auth';
 import { signIn } from '~/lib/auth-client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from '../ui/toast';
 import { Spinner } from '../ui/spinner';
-import { Link, useNavigation } from 'react-router';
+import { Link } from 'react-router';
 import { useState } from 'react';
+import { loginFormSchema, type LoginFormType } from '@repo/validation';
 
 export function LoginForm() {
   const [isRedirecting, setIsRedirecting] = useState(false);

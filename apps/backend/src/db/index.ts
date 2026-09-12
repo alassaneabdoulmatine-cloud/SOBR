@@ -9,7 +9,7 @@
 // export const db = drizzle(DATABASE_URL, { relations });
 
 import 'dotenv/config';
-import { relations } from './schema';
+import { relations } from './relations';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 
