@@ -22,6 +22,16 @@ export class ProjectController {
     return this.projectService.findAll(session.session.activeOrganizationId as string);
   }
 
+  @Get('active')
+  findActiveProjects(@Session() session: UserSession) {
+    return this.projectService.findActiveProjects(session.session.activeOrganizationId as string);
+  }
+
+  @Get('trash')
+  findDeletedProjects(@Session() session: UserSession) {
+    return this.projectService.findDeletedProjects(session.session.activeOrganizationId as string);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @Session() session: UserSession) {
     return this.projectService.findOne(id, session.session.activeOrganizationId as string);
@@ -32,8 +42,18 @@ export class ProjectController {
     return this.projectService.update(id, session.session.activeOrganizationId as string, updateProjectDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string, @Session() session: UserSession) {
-    return this.projectService.remove(id, session.session.activeOrganizationId as string);
+  @Patch(':id/to-trash')
+  moveToTrash(@Param('id') id: string, @Session() session: UserSession) {
+    return this.projectService.moveToTrash(id, session.session.activeOrganizationId as string);
+  }
+
+  @Patch(':id/restore')
+  restoreFromTrash(@Param('id') id: string, @Session() session: UserSession) {
+    return this.projectService.restoreFromTrash(id, session.session.activeOrganizationId as string);
+  }
+
+  @Delete(':id/permanent')
+  permanentDelete(@Param('id') id: string, @Session() session: UserSession) {
+    return this.projectService.permanentDelete(id, session.session.activeOrganizationId as string);
   }
 }

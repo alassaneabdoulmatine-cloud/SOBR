@@ -1,3 +1,4 @@
+import { table } from 'console';
 import { defineRelations } from 'drizzle-orm';
 import { pgTable, text, timestamp, boolean, index, uniqueIndex, pgEnum } from 'drizzle-orm/pg-core';
 
@@ -128,23 +129,32 @@ export const invitation = pgTable(
 
 // editor tables
 export const projectFormat = pgEnum('project_format', ['Horyzontal', 'Vertical']);
-export const project = pgTable('project', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text('name').notNull(),
-  thumbnailUrl: text('thumbnail_url'),
-  format: projectFormat('format').default('Vertical'),
-  organizationId: text('organization_id')
-    .notNull()
-    .references(() => organization.id, { onDelete: 'cascade' }),
-  ownerId: text('owner_id').references(() => user.id, { onDelete: 'set null' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
+export const project = pgTable(
+  'project',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text('name').notNull(),
+    thumbnailUrl: text('thumbnail_url'),
+    format: projectFormat('format').default('Vertical'),
+    organizationId: text('organization_id')
+      .notNull()
+      .references(() => organization.id, { onDelete: 'cascade' }),
+    ownerId: text('owner_id').references(() => user.id, { onDelete: 'set null' }),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+    deletedAt: timestamp('deleted_at'),
+  },
+  (table) => [
+    index('project_organizationId_idx').on(table.organizationId),
+    index('project_ownerId_idx').on(table.ownerId),
+    index('project_deletedAt_idx').on(table.deletedAt),
+  ],
+);
 
 // shema = all tables
 export const schema = {
