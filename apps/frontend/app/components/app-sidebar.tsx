@@ -11,6 +11,7 @@ import {
   Bell,
   BadgeCheck,
   Settings,
+  Trash,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -106,9 +107,9 @@ export function AppSidebar() {
       icon: Layers,
     },
     {
-      title: 'Setting',
-      url: '/settings',
-      icon: Settings,
+      title: 'Trash',
+      url: '/trash',
+      icon: Trash,
     },
   ];
 
